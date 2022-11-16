@@ -20,13 +20,13 @@ runs:
         shell: bash
         id: setup-config
         env:
-          SECURE: ${{ inputs.insecureRegistries }}
-          SSH_GATEWAY_ADDR: ${{ inputs.registryMirrors }}
+          INSECURE_REG: ${{ inputs.insecureRegistries }}
+          REG_MIRRORS: ${{ inputs.registryMirrors }}
         run: |
            cat <<EOF | sudo tee /etc/docker/daemon.json
            {
-               "insecure-registries" : [${{ inputs.registries }} ],
-               "registry-mirrors": [${{ inputs.mirrors }}]
+               "insecure-registries" : [${INSECURE_REG} ],
+               "registry-mirrors": [${REG_MIRRORS}]
            }
            EOF
       - name: Reload Docker
