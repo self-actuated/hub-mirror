@@ -8,11 +8,11 @@ inputs:
   insecureRegistries:
     description: 'The gateway hostname address or IP address.'
     required: true
-    default: "192.168.128.1:5000"
+    default: "\"192.168.128.1:5000\","
   registryMirrors:
     description: 'Whether to use TLS.'
     required: true
-    default: "http://192.168.128.1:5000"
+    default: "\"http://192.168.128.1:5000\","
 runs:
     using: 'composite'
     steps:
