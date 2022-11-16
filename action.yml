@@ -1,0 +1,36 @@
+# Copyright (c) 2022 OpenFaaS Ltd
+name: 'Setup local mirror for Docker Hub'
+description: 'Setup local mirror for Docker Hub'
+branding:
+  icon: 'arrow-right-circle'
+  color: 'gray-dark'
+inputs:
+  insecureRegistries:
+    description: 'The gateway hostname address or IP address.'
+    required: true
+    default: "192.168.128.1:5000"
+  registryMirrors:
+    description: 'Whether to use TLS.'
+    required: true
+    default: "http://192.168.128.1:5000"
+runs:
+    using: 'composite'
+    steps:
+      - name: Setup config
+        shell: bash
+        id: setup-config
+        env:
+          SECURE: ${{ inputs.insecureRegistries }}
+          SSH_GATEWAY_ADDR: ${{ inputs.registryMirrors }}
+        run: |
+           cat <<EOF | sudo tee /etc/docker/daemon.json
+           {
+               "insecure-registries" : [${{ inputs.registries }} ],
+               "registry-mirrors": [${{ inputs.mirrors }}]
+           }
+           EOF
+      - name: Reload Docker
+        shell: bash
+        id: reload-docker
+        run: |
+           sudo systemctl daemon-reload && sudo systemctl restart docker
