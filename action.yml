@@ -1,5 +1,5 @@
 # Copyright (c) 2022 OpenFaaS Ltd
-name: 'Setup local mirror for Docker Hub'
+name: 'hub-mirror'
 description: 'Setup local mirror for Docker Hub'
 branding:
   icon: 'arrow-right-circle'
@@ -34,3 +34,4 @@ runs:
         id: reload-docker
         run: |
            sudo systemctl daemon-reload && sudo systemctl restart docker
+
