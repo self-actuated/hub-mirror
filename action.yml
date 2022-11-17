@@ -33,5 +33,6 @@ runs:
         shell: bash
         id: reload-docker
         run: |
+           sudo cat /etc/docker/daemon.json
            sudo systemctl daemon-reload && sudo systemctl restart docker
 
