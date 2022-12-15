@@ -13,6 +13,19 @@ inputs:
     description: 'Whether to use TLS.'
     required: true
     default: "\"http://192.168.128.1:5000\""
+  buildkitRegistryMirror:
+    description: 'Registry mirror to be used by buildx builder.'
+    required: true
+    default: "\"192.168.128.1:5000\""
+  buildkitRegistryHTTP:
+    description: 'Whether to us HTTP.'
+    required: true
+    default: "true"
+  buildkitRegistryInsecure:
+    description: 'Whether to use TLS.'
+    required: true
+    default: "true"
+  
 runs:
     using: 'composite'
     steps:
@@ -35,4 +48,14 @@ runs:
         run: |
            sudo cat /etc/docker/daemon.json
            sudo systemctl daemon-reload && sudo systemctl restart docker
-
+      - name: Configure buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          config-inline: |
+            [registry."docker.io"]
+              mirrors = [${{ inputs.buildkitRegistryMirror }}]
+              http = ${{ inputs.buildkitRegistryHTTP }}
+              insecure = ${{ inputs.buildkitRegistryInsecure }}
+            [registry.${{ inputs.buildkitRegistryMirror }}]
+              http = ${{ inputs.buildkitRegistryHTTP }}
+              insecure = ${{ inputs.buildkitRegistryInsecure }}
