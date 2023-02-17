@@ -36,6 +36,7 @@ runs:
           INSECURE_REG: ${{ inputs.insecureRegistries }}
           REG_MIRRORS: ${{ inputs.registryMirrors }}
         run: |
+           sudo mkdir -p /etc/docker
            cat <<EOF | sudo tee /etc/docker/daemon.json
            {
                "insecure-registries" : [${INSECURE_REG} ],
