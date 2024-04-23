@@ -50,8 +50,11 @@ runs:
            sudo cat /etc/docker/daemon.json
            sudo systemctl daemon-reload && sudo systemctl restart docker
       - name: Configure buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
         with:
+          # AE: This appeared to have an issue for a user, so it's being set to
+          # false for now.
+          cache-binary: false
           config-inline: |
             [registry."docker.io"]
               mirrors = [${{ inputs.buildkitRegistryMirror }}]
