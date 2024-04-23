@@ -55,7 +55,7 @@ runs:
           # AE: This appeared to have an issue for a user, so it's being set to
           # false for now.
           cache-binary: false
-          config-inline: |
+          buildkitd-config-inline: |
             [registry."docker.io"]
               mirrors = [${{ inputs.buildkitRegistryMirror }}]
               http = ${{ inputs.buildkitRegistryHTTP }}
