@@ -87,11 +87,7 @@ runs:
           buildkitd-config-inline: |
             [registry."docker.io"]
               mirrors = [${{ inputs.buildkitRegistryMirror }}]
+              ca = ["/runner/ca.crt"]
             [registry.${{ inputs.buildkitRegistryMirror }}]
+              ca = ["/runner/ca.crt"]
 
-      - name: Reload Docker 2
-        shell: bash
-        id: reload-docker-2
-        run: |
-           sudo cat /etc/docker/daemon.json
-           sudo systemctl daemon-reload && sudo systemctl restart docker
