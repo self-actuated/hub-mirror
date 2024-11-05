@@ -89,9 +89,9 @@ runs:
               mirrors = [${{ inputs.buildkitRegistryMirror }}]
             [registry.${{ inputs.buildkitRegistryMirror }}]
 
-      - name: Reload Docker
+      - name: Reload Docker 2
         shell: bash
-        id: reload-docker
+        id: reload-docker-2
         run: |
            sudo cat /etc/docker/daemon.json
            sudo systemctl daemon-reload && sudo systemctl restart docker
