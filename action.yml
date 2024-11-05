@@ -8,23 +8,23 @@ inputs:
   insecureRegistries:
     description: 'The gateway hostname address or IP address.'
     required: true
-    default: "\"192.168.128.1:5000\""
+    default: ""
   registryMirrors:
-    description: 'Whether to use TLS.'
+    description: 'Registry mirrors for the Docker daemon.'
     required: true
-    default: "\"http://192.168.128.1:5000\""
+    default: "\"https://192.168.128.1:5000\""
   buildkitRegistryMirror:
     description: 'Registry mirror to be used by buildx builder.'
     required: true
     default: "\"192.168.128.1:5000\""
   buildkitRegistryHTTP:
-    description: 'Whether to us HTTP.'
+    description: 'Whether to use HTTP instead of HTTPS.'
     required: true
-    default: "true"
+    default: "false"
   buildkitRegistryInsecure:
     description: 'Whether to use TLS.'
     required: true
-    default: "true"
+    default: "false"
   
 runs:
     using: 'composite'
@@ -37,19 +37,31 @@ runs:
           REG_MIRRORS: ${{ inputs.registryMirrors }}
         run: |
            sudo mkdir -p /etc/docker
-           cat <<EOF | sudo tee /etc/docker/daemon.json
-           {
-               "insecure-registries" : [${INSECURE_REG} ],
-               "registry-mirrors": [${REG_MIRRORS}]
-           }
-           EOF
+           if [ -n "$INSECURE_REG" ] ; then
+             cat <<EOF | sudo tee /etc/docker/daemon.json
+             {
+                 "insecure-registries" : [${INSECURE_REG} ],
+                 "registry-mirrors": [${REG_MIRRORS}]
+             }
+             EOF
+           else
+             if [ -n $INSECURE_REG ] ; 
+             cat <<EOF | sudo tee /etc/docker/daemon.json
+             {
+                 "registry-mirrors": [${REG_MIRRORS}]
+             }
+             EOF
+           fi           
       - name: Reload Docker
         shell: bash
         id: reload-docker
         run: |
            sudo cat /etc/docker/daemon.json
            sudo systemctl daemon-reload && sudo systemctl restart docker
-      - name: Configure buildx
+      
+      # Step with http and insecure sections included
+      - name: Configure buildx with insecure registry
+        if: ${{ inputs.buildkitRegistryInsecure == 'true' }}
         uses: docker/setup-buildx-action@v3
         with:
           # AE: This appeared to have an issue for a user, so it's being set to
@@ -63,3 +75,16 @@ runs:
             [registry.${{ inputs.buildkitRegistryMirror }}]
               http = ${{ inputs.buildkitRegistryHTTP }}
               insecure = ${{ inputs.buildkitRegistryInsecure }}
+      
+      # Step without http and insecure sections
+      - name: Configure buildx without insecure registry
+        if: ${{ inputs.buildkitRegistryInsecure != 'true' }}
+        uses: docker/setup-buildx-action@v3
+        with:
+          # AE: This appeared to have an issue for a user, so it's being set to
+          # false for now.
+          cache-binary: false
+          buildkitd-config-inline: |
+            [registry."docker.io"]
+              mirrors = [${{ inputs.buildkitRegistryMirror }}]
+            [registry.${{ inputs.buildkitRegistryMirror }}]
