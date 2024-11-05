@@ -38,19 +38,18 @@ runs:
         run: |
            sudo mkdir -p /etc/docker
            if [ -n "$INSECURE_REG" ] ; then
-             cat <<EOF | sudo tee /etc/docker/daemon.json
-             {
-                 "insecure-registries" : [${INSECURE_REG} ],
-                 "registry-mirrors": [${REG_MIRRORS}]
-             }
-             EOF
+           cat <<EOF | sudo tee /etc/docker/daemon.json
+           {
+               "insecure-registries" : [${INSECURE_REG} ],
+               "registry-mirrors": [${REG_MIRRORS}]
+           }
+           EOF
            else
-             if [ -n $INSECURE_REG ] ; 
-             cat <<EOF | sudo tee /etc/docker/daemon.json
-             {
-                 "registry-mirrors": [${REG_MIRRORS}]
-             }
-             EOF
+           cat <<EOF | sudo tee /etc/docker/daemon.json
+           {
+               "registry-mirrors": [${REG_MIRRORS}]
+           }
+           EOF
            fi           
       - name: Reload Docker
         shell: bash
