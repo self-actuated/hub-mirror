@@ -51,13 +51,14 @@ runs:
            }
            EOF
            fi           
+
       - name: Reload Docker
         shell: bash
         id: reload-docker
         run: |
            sudo cat /etc/docker/daemon.json
            sudo systemctl daemon-reload && sudo systemctl restart docker
-      
+
       # Step with http and insecure sections included
       - name: Configure buildx with insecure registry
         if: ${{ inputs.buildkitRegistryInsecure == 'true' }}
@@ -87,3 +88,10 @@ runs:
             [registry."docker.io"]
               mirrors = [${{ inputs.buildkitRegistryMirror }}]
             [registry.${{ inputs.buildkitRegistryMirror }}]
+
+      - name: Reload Docker
+        shell: bash
+        id: reload-docker
+        run: |
+           sudo cat /etc/docker/daemon.json
+           sudo systemctl daemon-reload && sudo systemctl restart docker
