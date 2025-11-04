@@ -52,7 +52,8 @@ runs:
            else
            cat <<EOF | sudo tee /etc/docker/daemon.json
            {
-               "registry-mirrors": [${REG_MIRRORS}]
+               "registry-mirrors": [${REG_MIRRORS}],
+               "mtu": ${{ inputs.mtu }}
            }
            EOF
            fi           
@@ -80,7 +81,7 @@ runs:
             [registry.${{ inputs.buildkitRegistryMirror }}]
               http = ${{ inputs.buildkitRegistryHTTP }}
               insecure = ${{ inputs.buildkitRegistryInsecure }}
-      
+
       # Step without http and insecure sections
       - name: Configure buildx without insecure registry
         if: ${{ inputs.buildkitRegistryInsecure != 'true' }}
@@ -95,4 +96,3 @@ runs:
               ca = ["/runner/ca.crt"]
             [registry.${{ inputs.buildkitRegistryMirror }}]
               ca = ["/runner/ca.crt"]
-
