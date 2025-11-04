@@ -17,12 +17,12 @@ The `v3` version uses TLS for the registry with a CA injected to the VM and is t
       - uses: self-actuated/hub-mirror@v3
 ```
 
-Set a custom MTU for Docker's bridges:
+Set a custom MTU for Docker's bridges i.e. for GCP's defaults on VPCs (1460):
 
 ```yaml
       - uses: self-actuated/hub-mirror@v4
         with:
-          mtu: 1450
+          mtu: 1460
 ```
 
 ## License
