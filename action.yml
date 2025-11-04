@@ -25,7 +25,11 @@ inputs:
     description: 'Whether to use TLS.'
     required: true
     default: "false"
-  
+  mtu:
+    description: 'MTU size for Docker daemon.'
+    required: false
+    default: "1500"
+
 runs:
     using: 'composite'
     steps:
@@ -41,7 +45,8 @@ runs:
            cat <<EOF | sudo tee /etc/docker/daemon.json
            {
                "insecure-registries" : [${INSECURE_REG} ],
-               "registry-mirrors": [${REG_MIRRORS}]
+               "registry-mirrors": [${REG_MIRRORS}],
+               "mtu": ${{ inputs.mtu }}
            }
            EOF
            else
