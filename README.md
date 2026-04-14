@@ -25,6 +25,12 @@ Set a custom MTU for Docker's bridges i.e. for GCP's defaults on VPCs (1460):
           mtu: 1460
 ```
 
+v5 migrates from `docker/setup-buildx-action` at `v3` to `v4`.
+
+```yaml
+      - uses: self-actuated/hub-mirror@v5
+```
+
 ## License
 
 [MIT License](./LICENSE)
