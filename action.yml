@@ -68,7 +68,7 @@ runs:
       # Step with http and insecure sections included
       - name: Configure buildx with insecure registry
         if: ${{ inputs.buildkitRegistryInsecure == 'true' }}
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
           # AE: This appeared to have an issue for a user, so it's being set to
           # false for now.
@@ -85,7 +85,7 @@ runs:
       # Step without http and insecure sections
       - name: Configure buildx without insecure registry
         if: ${{ inputs.buildkitRegistryInsecure != 'true' }}
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
           # AE: This appeared to have an issue for a user, so it's being set to
           # false for now.
